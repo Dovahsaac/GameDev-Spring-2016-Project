@@ -36,7 +36,7 @@ public class shipControl : MonoBehaviour {
 		test.z = pointer.transform.position.z - Camera.main.transform.position.z;
 		test = Camera.main.ScreenToWorldPoint (test);
 		disBehind.z = transform.position.z - Camera.main.transform.position.z;
-
+		//disBehind.x = transform.position.x - Camera.main.transform.position.x;
 		disBehind = Camera.main.ScreenToWorldPoint (disBehind);
 		pointer.transform.position = /*Vector3.MoveTowards (pointer.transform.position,*/ test /*, force * Time.deltaTime)*/;
 
