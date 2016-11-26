@@ -11,11 +11,16 @@ public class Enemy_Object : MonoBehaviour {
 	private Vector3 lagpos;
 	private bool timed;
 	private Vector3 bulletpos;
+	public GameObject target;
+	private Enemyclass Enemystats = new Enemyclass ();
+	public GameObject enemySpawner;
+	public int index;
 	// Use this for initialization
 	void Start () {
 		hasfired = false;
 		timed = true;
 		bullet = transform.FindChild("Bullet").gameObject;
+
 	}
 	
 	// Update is called once per frame
@@ -28,14 +33,15 @@ public class Enemy_Object : MonoBehaviour {
 
 			if (hasfired == false) {
 				hasfired = true;
-				lagpos = player.transform.position;
+				lagpos = target.transform.position;
 				shoot ();
 				
 			}
 
 
 			if (hasfired = true) {
-				if (bulletpos == lagpos) {
+			if (bulletpos == (lagpos)) {
+					
 					Destroy (newbullet);
 					hasfired = false;
 
@@ -46,6 +52,25 @@ public class Enemy_Object : MonoBehaviour {
 					
 				}
 			}
+
+		if (Enemystats.returnhealth() == 0) {
+
+
+			enemySpawner.GetComponent<Enemy_spawner> ().amountofenemies--;
+			enemySpawner.GetComponent<Enemy_spawner> ().xchang = enemySpawner.GetComponent<Enemy_spawner> ().xchang + 5;
+			Destroy (newbullet);
+			Destroy(gameObject);
+
+		
+		
+		}
+		if (enemySpawner.GetComponent<Enemy_spawner> ().amountofenemies < 3) {
+			xvar = xvar + 5;
+		}
+		Debug.Log (Enemystats.returnhealth ());
+
+
+
 
 
 	}
@@ -63,9 +88,24 @@ public class Enemy_Object : MonoBehaviour {
 
 	IEnumerator shoottime(){
 		yield return new WaitForSeconds (5);
-		hasfired = false;
+
 
 
 	}
+
+	void OnCollisionEnter(Collision col){
+		if (col.gameObject.tag == "pBullet") {
+			Enemystats.decrementhealth ();
+			Debug.Log ("Hit");
+		}
+	
+	
+	
+	}
+
+
+
+
+
 
 }

@@ -2,11 +2,12 @@
 using System.Collections;
 
 public class Enemy_spawner : MonoBehaviour {
-	
-	private int amountofenemies;
+	public GameObject[] enemies = new GameObject[3];
+	public int amountofenemies;
 	public GameObject enemy;
-	private int xchang;
+	public int xchang;
 	private GameObject newenemy;
+
 	// Use this for initialization
 	void Start () {
 		amountofenemies = 0;
@@ -15,20 +16,34 @@ public class Enemy_spawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (amountofenemies == 0) {
+		
+
+
+		Debug.Log (amountofenemies);
+		/*if (amountofenemies == 0) {
 			createenemy ();
 			amountofenemies++;
-		} 
-		else if (amountofenemies < 3) {
+		} */
+		if (amountofenemies < 3) {
 			StartCoroutine (spawn ());
 			amountofenemies++;
 			
 		}
+
+
+
 	}
 
 	IEnumerator spawn () {
-		if (amountofenemies == 1) {
+		if (amountofenemies == 0) {
 			yield return new WaitForSeconds (10);
+			createenemy ();
+		
+		
+		}
+
+		if (amountofenemies == 1) {
+			yield return new WaitForSeconds (20);
 			createenemy ();
 		}
 		if (amountofenemies == 2) {
@@ -40,10 +55,14 @@ public class Enemy_spawner : MonoBehaviour {
 
 	void createenemy(){
 		newenemy = Instantiate (enemy);
+
 		newenemy.GetComponent<Enemy_Object>().xvar = xchang;
 		newenemy.GetComponent<MeshRenderer> ().enabled = true;
 		newenemy.GetComponent<Enemy_Object> ().enabled = true;
-		xchang = xchang + 5;
+
+		xchang = xchang - 5;
+		newenemy.GetComponent<Enemy_Object>().index = amountofenemies;
+
 
 	}
 

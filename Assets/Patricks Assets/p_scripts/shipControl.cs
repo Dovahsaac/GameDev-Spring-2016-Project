@@ -20,6 +20,14 @@ public class shipControl : MonoBehaviour {
 	// Use this for initialization
 	public Rigidbody rigid;
 	private Ship ship = new Ship ();
+	public GameObject healthtext;
+	private TextMesh healthmesh;
+	private MeshRenderer healthrend;
+	public GameObject pbullet;
+	private GameObject newpbullet;
+	private Vector3 lagpos;
+	private bool shot;
+
 	void Start () {
 		originalpos = transform.position;
 		rigid = GetComponent<Rigidbody> ();
@@ -29,6 +37,11 @@ public class shipControl : MonoBehaviour {
 		livesrend = livesmesh.GetComponent<MeshRenderer> ();
 		livesrend.enabled = true;
 		livesmesh.text = "Lives: " + ship.returnlives();
+		healthmesh = healthtext.GetComponent<TextMesh> ();
+		healthrend = healthtext.GetComponent<MeshRenderer> ();
+		healthrend.enabled = true;
+		healthmesh.text = "Health: " + ship.returnhealth ();
+		shot = false;
 	}
 	
 	// Update is called once per frame
@@ -49,8 +62,30 @@ public class shipControl : MonoBehaviour {
 
 
 		transform.position = Vector3.MoveTowards (transform.position, disBehind, force * Time.deltaTime);
-
+		if (shot == false) {
+			if (Input.GetMouseButtonDown (0)) {
+				newpbullet = Instantiate (pbullet);
+				newpbullet.transform.position = pointer.transform.position;
+				lagpos = Input.mousePosition;
+				lagpos.z = 15;
+				lagpos = Camera.main.ScreenToWorldPoint (lagpos);
+				lagpos.y += 8;
+				lagpos.x -= 0.5f;
+				newpbullet.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, 20f * Time.deltaTime);
+				shot = true;
+			}
+		}
+		if (shot == true) {
+			if (newpbullet.transform.position == lagpos) {
+				Destroy (newpbullet);
+				shot = false;
+			} else {
+				newpbullet.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, 10f * Time.deltaTime);
+			
+			}
 		
+		}
+
 
 
 
@@ -68,6 +103,7 @@ public class shipControl : MonoBehaviour {
 
 			if (ship.returnlives() > 0) {
 				ship.decrementlives ();
+				healthmesh.text = "RESPAWN";
 				StartCoroutine (respawn ());
 			} else {
 				texrend.enabled = true;
@@ -79,6 +115,20 @@ public class shipControl : MonoBehaviour {
 
 
 		}
+		if (col.gameObject.tag == "Bullet") {
+			//Destroy (col.gameObject); //this may be needed who knows
+			ship.decrementhealth();
+			healthmesh.text = "Health: " + ship.returnhealth ();
+			if (ship.returnhealth() == 0) {
+				GetComponent<MeshRenderer> ().enabled = false; 
+				GetComponent<BoxCollider> ().enabled = false;
+				transform.position = originalpos;
+
+				ship.decrementlives ();
+				StartCoroutine (respawn ());
+				healthmesh.text = "RESPAWN";
+			}
+		}
 
 	
 	
@@ -86,6 +136,7 @@ public class shipControl : MonoBehaviour {
 
 	IEnumerator respawn(){
 		texrend.enabled = true;
+		ship.changeHealth (10);
 		newtex.text = "Respawning in 5";
 		yield return new WaitForSeconds (1);
 		newtex.text = "Respawning in 4";
@@ -98,10 +149,11 @@ public class shipControl : MonoBehaviour {
 		yield return new WaitForSeconds (1);
 		newtex.text = "Respawned";
 		GetComponent<MeshRenderer> ().enabled = true;
-
+		healthmesh.text = "Invun";
 		yield return new WaitForSeconds (2);
 		texrend.enabled = false;
 		GetComponent<BoxCollider> ().enabled = true;
+		healthmesh.text = "Health: " + ship.returnhealth();
 	
 	
 	}
