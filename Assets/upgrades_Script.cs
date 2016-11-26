@@ -79,17 +79,29 @@ public class upgrades_Script : MonoBehaviour {
 
         GameObject.Find("Reset").GetComponent<Button>().onClick.AddListener(Reset);
         GameObject.Find("MainMenu_Button").GetComponent<Button>().onClick.AddListener(Exit);
+        GameObject.Find("Continue_Button").GetComponent<Button>().onClick.AddListener(Continue);
         colorButtons();
         GameObject.Find("abilityPoints").GetComponent<Text>().text = ap.ToString();
 
     }
 
-    private void Exit()
+    private void Continue()
+    {
+        Save();
+        SceneManager.LoadScene("Patricks Workbench");
+    }
+
+    private void Save()
     {
         StreamWriter writer = new StreamWriter("save.txt");
         writer.WriteLine(String.Format("{0}\t{1}\t{2}\t{3}\t{4}", ap, tankLVL, speedLVL, damageLVL, utilityLVL));
         writer.Flush();
         writer.Close();
+    }
+
+    void Exit()
+    {
+        Save();
         SceneManager.LoadScene("Main Menu");
     }
 
