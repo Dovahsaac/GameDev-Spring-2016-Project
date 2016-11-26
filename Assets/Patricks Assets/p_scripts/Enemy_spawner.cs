@@ -12,6 +12,7 @@ public class Enemy_spawner : MonoBehaviour {
 	void Start () {
 		amountofenemies = 0;
 		xchang = 0;
+
 	}
 	
 	// Update is called once per frame
@@ -55,9 +56,12 @@ public class Enemy_spawner : MonoBehaviour {
 
 	void createenemy(){
 		newenemy = Instantiate (enemy);
-
+		newenemy.GetComponent<SphereCollider> ().enabled = true;
 		newenemy.GetComponent<Enemy_Object>().xvar = xchang;
-		newenemy.GetComponent<MeshRenderer> ().enabled = true;
+		newenemy.transform.GetChild(1).GetChild(0).GetComponent<MeshRenderer> ().enabled = true;
+		newenemy.transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer> ().enabled = true;
+		newenemy.transform.GetChild(1).GetChild(2).GetComponent<MeshRenderer> ().enabled = true;
+		newenemy.transform.GetChild(1).GetChild(3).GetComponent<MeshRenderer> ().enabled = true;
 		newenemy.GetComponent<Enemy_Object> ().enabled = true;
 
 		xchang = xchang - 5;
