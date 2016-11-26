@@ -24,14 +24,16 @@ public class Game_Loop : MonoBehaviour {
         {
             //Moves the cubes in the Z axis;
             cube.transform.Translate(-Vector3.forward*Time.deltaTime*speed,Camera.main.transform);
+            cube.transform.Rotate(Vector3.up * Time.deltaTime);
 
             //Respawns cubes if they pass the camera;
             if (cube.transform.position.z < Camera.main.transform.position.z - despawn_distance)
             { 
-                x = Random.value*4-2;
-                y = Random.value*4-2;
+                x = Random.value*16-8;
+                y = Random.value*16-8;
 
                 cube.transform.position = new Vector3(x, y, respawn_distance);
+                cube.transform.localEulerAngles = new Vector3(Random.value*360, Random.value*360, Random.value*360);
             }
         }
 	
