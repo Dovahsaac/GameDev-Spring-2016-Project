@@ -29,8 +29,8 @@ public class Game_Loop : MonoBehaviour {
             //Respawns cubes if they pass the camera;
             if (cube.transform.position.z < Camera.main.transform.position.z - despawn_distance)
             { 
-                x = Random.value*16-8;
-                y = Random.value*16-8;
+                x = Random.value*32-16;
+                y = Random.value*32-16;
 
                 cube.transform.position = new Vector3(x, y, respawn_distance);
                 cube.transform.localEulerAngles = new Vector3(Random.value*360, Random.value*360, Random.value*360);
