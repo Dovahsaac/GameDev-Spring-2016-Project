@@ -29,6 +29,8 @@ public class Menu_Script : MonoBehaviour {
         writer.WriteLine("0\t0\t0\t0\t0");
         writer.Flush();
         writer.Close();
+
+        SceneManager.LoadScene("Patricks Workbench");
     }
 
     private void loadHighScores()
