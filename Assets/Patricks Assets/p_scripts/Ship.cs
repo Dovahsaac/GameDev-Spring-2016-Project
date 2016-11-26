@@ -1,16 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Ship : MonoBehaviour {
+public class Ship {
+	private int lives;
+	private int health;
+	public Ship(){
+		lives = 3;
+		health = 10;
 
+	}
+		
+	public int returnlives(){
+		return lives;
 
-	// Use this for initialization
-	void Start () {
+	}
+	public void decrementlives(){
+		lives--;
+		
+	}
+	public void incrementlives(){
+		lives++;
+	}
+	public void changeLives(int newvalue){
+		lives = newvalue;
+	}
+
+	public void changeHealth(int newvalue){
+		health = newvalue;
 	
 	}
+
+	public int returnhealth(){
 	
-	// Update is called once per frame
-	void Update () {
+		return health;
 	
 	}
+
+	public void decrementhealth(){
+
+		health--;
+	
+	}
+	public void incrementhealth(){
+		health++;
+	}
+
+
+
+
+
 }
