@@ -15,6 +15,7 @@ public class Enemy_Object : MonoBehaviour {
 	private Enemyclass Enemystats = new Enemyclass ();
 	public GameObject enemySpawner;
 	public int index;
+	public GameObject scores;
 	// Use this for initialization
 	void Start () {
 		hasfired = false;
@@ -55,7 +56,7 @@ public class Enemy_Object : MonoBehaviour {
 
 		if (Enemystats.returnhealth() == 0) {
 
-
+			scores.GetComponent<score_UI>().score += 100;
 			enemySpawner.GetComponent<Enemy_spawner> ().amountofenemies--;
 			enemySpawner.GetComponent<Enemy_spawner> ().xchang = enemySpawner.GetComponent<Enemy_spawner> ().xchang + 5;
 			Destroy (newbullet);
@@ -95,6 +96,7 @@ public class Enemy_Object : MonoBehaviour {
 
 	void OnCollisionEnter(Collision col){
 		if (col.gameObject.tag == "pBullet") {
+
 			Enemystats.decrementhealth ();
 			Debug.Log ("Hit");
 		}

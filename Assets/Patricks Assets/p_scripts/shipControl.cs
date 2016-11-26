@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
+using System;
 
 public class shipControl : MonoBehaviour {
 	public float force;	
@@ -25,10 +27,26 @@ public class shipControl : MonoBehaviour {
 	private MeshRenderer healthrend;
 	public GameObject pbullet;
 	private GameObject newpbullet;
+	private GameObject newpbullet2;
 	private Vector3 lagpos;
 	private bool shot;
+	private int[] upgrades = new int[5];
+	private float shotspeed;
+	private int timesshot;
+	private float ingametime;
+	private bool isregening;
+	public bool isover;
 
 	void Start () {
+		
+		timesshot = 0;
+		StreamReader reader = new StreamReader("save.txt");
+		string[] file = reader.ReadLine ().Split('\t');
+		for (int i = 0; i < file.Length; i++){
+			upgrades [i] = Int32.Parse (file [i]);
+
+
+		}
 		originalpos = transform.position;
 		rigid = GetComponent<Rigidbody> ();
 		newtex = respawntext.GetComponent<TextMesh> ();
@@ -42,10 +60,27 @@ public class shipControl : MonoBehaviour {
 		healthrend.enabled = true;
 		healthmesh.text = "Health: " + ship.returnhealth ();
 		shot = false;
+		shotspeed = 20f;
 	}
 	
 	// Update is called once per frame
+	void FixedUpdate(){
+		
+
+	}
+
+
 	void Update () {
+		healthmesh.text = "Health: " + ship.returnhealth();
+		if (upgrades [2] == 3 && ship.returnhealth() < 10 && isregening == false) {
+			isregening = true;
+			StartCoroutine (regen ());
+
+		
+		
+		
+		}
+
 
 		livesmesh.text = "Lives: " + ship.returnlives ();
 
@@ -71,20 +106,34 @@ public class shipControl : MonoBehaviour {
 				lagpos = Camera.main.ScreenToWorldPoint (lagpos);
 				lagpos.y += 8;
 				lagpos.x -= 0.5f;
-				newpbullet.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, 20f * Time.deltaTime);
+				newpbullet.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, shotspeed * Time.deltaTime);
+				 
 				shot = true;
+				
+				if (upgrades [1] >= 2) {
+					newpbullet2 = Instantiate (pbullet);
+					newpbullet2.transform.position = pointer.transform.position;
+					lagpos = Input.mousePosition;
+					lagpos.z = 15;
+					lagpos = Camera.main.ScreenToWorldPoint (lagpos);
+					lagpos.y += 8;
+					lagpos.x -= 0.5f;
+				}
 			}
 		}
 		if (shot == true) {
 			if (newpbullet.transform.position == lagpos) {
 				Destroy (newpbullet);
+				if (upgrades [1] >= 2) {
+					Destroy (newpbullet2);
+				}
 				shot = false;
 			} else {
-				newpbullet.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, 10f * Time.deltaTime);
-			
+				newpbullet.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, shotspeed * Time.deltaTime);
+				newpbullet2.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, shotspeed * Time.deltaTime);
 			}
 		
-		}
+		} 
 
 
 
@@ -107,6 +156,7 @@ public class shipControl : MonoBehaviour {
 				StartCoroutine (respawn ());
 			} else {
 				texrend.enabled = true;
+				isover = true;
 				newtex.text = "You have failed";
 			
 			}
@@ -116,20 +166,57 @@ public class shipControl : MonoBehaviour {
 
 		}
 		if (col.gameObject.tag == "Bullet") {
+			GetComponent<BoxCollider> ().enabled = false;
+			//StartCoroutine (invun ());
 			//Destroy (col.gameObject); //this may be needed who knows
-			ship.decrementhealth();
+			if (upgrades [2] > 1) {
+				if (UnityEngine.Random.value > 0.25) {
+					if (upgrades [2] > 2) {
+						ship.decrementhealthhalf ();
+					} else {
+						ship.decrementhealth ();
+					}
+				} else {
+				}
+			}
 			healthmesh.text = "Health: " + ship.returnhealth ();
+			if (upgrades [1] == 3) {
+				shotspeed += 1f;
+			}
 			if (ship.returnhealth() == 0) {
 				GetComponent<MeshRenderer> ().enabled = false; 
 				GetComponent<BoxCollider> ().enabled = false;
 				transform.position = originalpos;
-
+				if (ship.returnlives() == 0) {
+					isover = true;
+				
+				
+				}
 				ship.decrementlives ();
-				StartCoroutine (respawn ());
-				healthmesh.text = "RESPAWN";
+
+				if (!isover) {
+					StartCoroutine (respawn ());
+					healthmesh.text = "RESPAWN";
+				}
+
 			}
+
 		}
 
+	
+	
+	}
+	void destroyBullets(){
+	GameObject[] gameObjects = new GameObject[400];
+		gameObjects = GameObject.FindGameObjectsWithTag ("pBullet");
+		for (int i = 0; i < gameObjects.Length; i++) {
+			if (gameObjects [i] != null) {
+				Destroy (gameObjects [i]);
+			
+			}
+		
+		
+		}
 	
 	
 	}
@@ -157,6 +244,23 @@ public class shipControl : MonoBehaviour {
 	
 	
 	}
+	IEnumerator invun(){
+		
+		yield return new WaitForSeconds (2);
+		GetComponent<BoxCollider> ().enabled = true;
 
+	
+	
+	}
+
+	IEnumerator regen(){
+		yield return new WaitForSeconds (10);
+		ship.incrementhealth();
+
+		isregening = false;
+
+	
+	
+	}
 
 }

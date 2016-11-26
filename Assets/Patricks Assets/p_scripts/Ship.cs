@@ -3,13 +3,17 @@ using System.Collections;
 
 public class Ship {
 	private int lives;
-	private int health;
+	private double health;
 	public Ship(){
 		lives = 3;
 		health = 10;
 
 	}
-		
+	public void decrementhealthhalf(){
+		health = health - 0.5;
+	
+	}
+
 	public int returnlives(){
 		return lives;
 
@@ -30,7 +34,7 @@ public class Ship {
 	
 	}
 
-	public int returnhealth(){
+	public double returnhealth(){
 	
 		return health;
 	
