@@ -20,7 +20,7 @@ public class Enemy_Object : MonoBehaviour {
 	void Start () {
 		hasfired = false;
 		timed = true;
-		bullet = transform.FindChild("Bullet").gameObject;
+		bullet = transform.FindChild("laser").gameObject;
 
 	}
 	
@@ -29,7 +29,7 @@ public class Enemy_Object : MonoBehaviour {
 		position = player.transform.position;
 		position.x = position.x - xvar;
 		position.y = position.y + 5;
-		position.z = position.z + 5;
+		position.z = position.z +4;
 		transform.position = Vector3.MoveTowards (transform.position, position, 2f * Time.deltaTime);
 
 			if (hasfired == false) {

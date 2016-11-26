@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.IO;
 using System;
@@ -39,7 +39,7 @@ public class shipControl : MonoBehaviour {
 	public GameObject jetbody;
 
 	void Start () {
-
+		
 		timesshot = 0;
 		StreamReader reader = new StreamReader("save.txt");
 		string[] file = reader.ReadLine ().Split('\t');
@@ -63,10 +63,10 @@ public class shipControl : MonoBehaviour {
 		shot = false;
 		shotspeed = 20f;
 	}
-
+	
 	// Update is called once per frame
 	void FixedUpdate(){
-
+		
 
 	}
 
@@ -77,9 +77,9 @@ public class shipControl : MonoBehaviour {
 			isregening = true;
 			StartCoroutine (regen ());
 
-
-
-
+		
+		
+		
 		}
 
 
@@ -108,9 +108,9 @@ public class shipControl : MonoBehaviour {
 				lagpos.y += 8;
 				lagpos.x -= 0.5f;
 				newpbullet.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, shotspeed * Time.deltaTime);
-
+				 
 				shot = true;
-
+				
 				if (upgrades [1] >= 2) {
 					newpbullet2 = Instantiate (pbullet);
 					newpbullet2.transform.position = pointer.transform.position;
@@ -133,7 +133,7 @@ public class shipControl : MonoBehaviour {
 				newpbullet.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, shotspeed * Time.deltaTime);
 				newpbullet2.transform.position = Vector3.MoveTowards (newpbullet.transform.position, lagpos, shotspeed * Time.deltaTime);
 			}
-
+		
 		} 
 
 
@@ -159,10 +159,10 @@ public class shipControl : MonoBehaviour {
 				texrend.enabled = true;
 				isover = true;
 				newtex.text = "You have failed";
-
+			
 			}
 		} else {
-
+		
 
 
 		}
@@ -191,8 +191,8 @@ public class shipControl : MonoBehaviour {
 				transform.position = originalpos;
 				if (ship.returnlives() == 0) {
 					isover = true;
-
-
+				
+				
 				}
 				ship.decrementlives ();
 
@@ -205,22 +205,22 @@ public class shipControl : MonoBehaviour {
 
 		}
 
-
-
+	
+	
 	}
 	void destroyBullets(){
-		GameObject[] gameObjects = new GameObject[400];
+	GameObject[] gameObjects = new GameObject[400];
 		gameObjects = GameObject.FindGameObjectsWithTag ("pBullet");
 		for (int i = 0; i < gameObjects.Length; i++) {
 			if (gameObjects [i] != null) {
 				Destroy (gameObjects [i]);
-
+			
 			}
-
-
+		
+		
 		}
-
-
+	
+	
 	}
 
 	IEnumerator respawn(){
@@ -243,16 +243,16 @@ public class shipControl : MonoBehaviour {
 		texrend.enabled = false;
 		GetComponent<BoxCollider> ().enabled = true;
 		healthmesh.text = "Health: " + ship.returnhealth();
-
-
+	
+	
 	}
 	IEnumerator invun(){
-
+		
 		yield return new WaitForSeconds (2);
 		GetComponent<BoxCollider> ().enabled = true;
 
-
-
+	
+	
 	}
 
 	IEnumerator regen(){
@@ -261,8 +261,8 @@ public class shipControl : MonoBehaviour {
 
 		isregening = false;
 
-
-
+	
+	
 	}
 
 }
