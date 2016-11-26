@@ -5,13 +5,17 @@ public class Enemy_Object : MonoBehaviour {
 	public GameObject player;
 	private Vector3 position;
 	public float xvar;
-	public GameObject bullet;
+	private GameObject bullet;
 	private GameObject newbullet;
 	private bool hasfired;
 	private Vector3 lagpos;
+	private bool timed;
+	private Vector3 bulletpos;
 	// Use this for initialization
 	void Start () {
 		hasfired = false;
+		timed = true;
+		bullet = transform.FindChild("Bullet").gameObject;
 	}
 	
 	// Update is called once per frame
@@ -21,22 +25,35 @@ public class Enemy_Object : MonoBehaviour {
 		position.y = position.y + 5;
 		position.z = position.z + 5;
 		transform.position = Vector3.MoveTowards (transform.position, position, 2f * Time.deltaTime);
-		if (hasfired == false) {
-			StartCoroutine (shoottime ());
-			hasfired = true;
-			lagpos = player.transform.position;
-			shoot ();
-		}
 
-		newbullet.transform.position = Vector3.MoveTowards(newbullet.transform.position,lagpos,10f*Time.deltaTime);
-		if (newbullet.transform.position == lagpos && hasfired == true) {
-			Destroy (newbullet);
-			hasfired = false;
-		}
+			if (hasfired == false) {
+				hasfired = true;
+				lagpos = player.transform.position;
+				shoot ();
+				
+			}
+
+
+			if (hasfired = true) {
+				if (bulletpos == lagpos) {
+					Destroy (newbullet);
+					hasfired = false;
+
+
+				} else {
+					bulletpos = newbullet.transform.position; 
+					newbullet.transform.position = Vector3.MoveTowards (newbullet.transform.position, lagpos, 5f * Time.deltaTime);
+					
+				}
+			}
+
+
 	}
+
 
 	void shoot(){
 		newbullet = Instantiate (bullet);
+		newbullet.transform.position = transform.position;
 		newbullet.GetComponent<MeshRenderer>().enabled = true;
 
 	
@@ -45,8 +62,8 @@ public class Enemy_Object : MonoBehaviour {
 	}
 
 	IEnumerator shoottime(){
-		yield return new WaitForSeconds (20);
-
+		yield return new WaitForSeconds (5);
+		hasfired = false;
 
 
 	}
